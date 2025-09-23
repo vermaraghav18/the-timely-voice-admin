@@ -1,6 +1,7 @@
 // admin/src/useAuth.jsx
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { auth } from "../../shared/api/index.js";
+ import api from "./shared/api/index.js";
+ const { auth } = api;
 
 const AuthCtx = createContext(null);
 
