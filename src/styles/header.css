@@ -1,0 +1,127 @@
+/* Top announcement / branding ribbon (optional, matches site vibe) */
+.tv-ribbon {
+  background: linear-gradient(90deg, var(--tv-secondary), var(--tv-primary));
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+}
+.tv-ribbon .tv-container {
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+/* Header */
+.tv-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--tv-bg);
+  border-bottom: 1px solid var(--tv-border);
+  height: var(--header-height);
+}
+.tv-header-inner {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 220px 1fr 340px;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Logo */
+.tv-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.4px;
+  color: var(--tv-primary);
+}
+.tv-logo-badge {
+  background: var(--tv-primary);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-weight: 900;
+}
+
+/* Nav */
+.tv-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tv-nav::-webkit-scrollbar { display: none; }
+.tv-nav a {
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--tv-text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.tv-nav a.active,
+.tv-nav a:hover {
+  color: var(--tv-text);
+  background: var(--tv-bg-soft);
+  border: 1px solid var(--tv-border);
+}
+
+/* Right tools */
+.tv-tools {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+}
+.tv-search {
+  position: relative; flex: 1;
+}
+.tv-search input {
+  width: 100%;
+  height: 36px;
+  border: 1px solid var(--tv-border);
+  border-radius: 10px;
+  padding: 0 12px 0 36px;
+  background: var(--tv-bg-soft);
+  outline: none;
+}
+.tv-search .icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; color: var(--tv-text-muted);
+}
+.tv-btn {
+  height: 36px; padding: 0 12px;
+  border-radius: 10px; border: 1px solid var(--tv-border);
+  background: var(--tv-bg);
+  font-weight: 600;
+}
+.tv-btn.primary {
+  background: var(--tv-primary); color: #fff; border-color: var(--tv-primary);
+}
+.tv-badge {
+  background: var(--tv-accent-2);
+  color: #3b2b00;
+  font-weight: 700;
+  padding: 0 8px; border-radius: 8px; height: 24px; display: inline-flex; align-items: center;
+}
+
+/* Underline section bar */
+.tv-underline {
+  border-top: 1px solid var(--tv-border);
+  border-bottom: 1px solid var(--tv-border);
+  background: #fff;
+}
+.tv-underline .bar {
+  display: flex; align-items: center; gap: 16px;
+  overflow-x: auto; scrollbar-width: none;
+  height: 40px;
+}
+.tv-underline a {
+  font-size: 13px; color: var(--tv-text-muted);
+}
+.tv-underline a.active,
+.tv-underline a:hover {
+  color: var(--tv-accent);
+  font-weight: 700;
+}
