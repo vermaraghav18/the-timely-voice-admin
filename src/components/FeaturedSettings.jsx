@@ -1,7 +1,8 @@
 // admin/src/components/FeaturedSettings.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { settings } from "../../../shared/api/index.js";
+import api from "../shared/api/index.js";
+ const { settings } = api;
 
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||

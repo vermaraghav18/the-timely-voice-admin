@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // path: components → src → admin → project root → shared
-import { settings, articles } from "../../../shared/api/index.js";
+import api from "../shared/api/index.js";
+const { settings, articles } = api;
 
 const defaultCustom = {
   leftImage: "",

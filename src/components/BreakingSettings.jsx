@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { settings, articles } from "../../../shared/api/index.js";
+import api from "../shared/api/index.js";
+const { settings, articles } = api;
 import { Link } from "react-router-dom";
 
 const emptyItem = () => ({
