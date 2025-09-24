@@ -27,18 +27,40 @@ import BreakingSettings from "./components/BreakingSettings.jsx";
 function Protected({ user, children }) {
   if (user === undefined) return null; // loading
   if (!user) return <Navigate to="/login" replace />;
-  if (user.role !== "admin") return <div style={{ padding: 24 }}>Forbidden</div>;
+  const role = String(user.role || "").toLowerCase(); // ← tolerate ADMIN/admin
+  if (role !== "admin") return <div style={{ padding: 24 }}>Forbidden</div>;
   return children;
 }
 
 /* ---------------- Auth: Login ---------------- */
 function Login() {
   const nav = useNavigate();
-  const { login } = useAuth();
+  const { user, login } = useAuth(); // ← read user so we can auto-skip login
   const [email, setEmail] = useState("admin@local");
   const [password, setPassword] = useState("changeme");
   const [err, setErr] = useState(null);
   const [busy, setBusy] = useState(false);
+
+  // If already authenticated (e.g., ADMIN_OPEN=1), bounce to dashboard
+  useEffect(() => {
+    if (user) nav("/");
+  }, [user, nav]);
+
+  // Also try /api/auth/me once on mount (covers first load before useAuth resolves)
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/auth/me", { credentials: "include" });
+        if (!cancelled && res.ok) nav("/");
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [nav]);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -112,7 +134,7 @@ function Shell({ children, onLogout, user }) {
       </main>
       <footer
         className="tv-container"
-        style={{ padding: "16px 0", borderTop: "1px solid var(--tv-border)", color: "var(--tv-text-muted)", fontSize: 12 }}
+        style={{ padding: "16px 0", borderTop: "1px solid {--tv-border}", color: "var(--tv-text-muted)", fontSize: 12 }}
       >
         © {new Date().getFullYear()} The Timely Voice — Admin
       </footer>
