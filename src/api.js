@@ -2,7 +2,7 @@
 const BASE =
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_API_URL ||
-  'http://localhost:4000';
+  '';
 
 async function apiGet(path, init) {
   const res = await fetch(`${BASE}${path}`, {
