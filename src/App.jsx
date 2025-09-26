@@ -344,7 +344,7 @@ function ArticleEdit() {
         </label>
       </div>
 
-      <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr 1fr" }}>
+      <div style={{ display: "grid", gap: 12, gridTemplateColumns: "1fr 1fr" }}>
         <label>
           Status
           <select value={form.status} onChange={(e) => up("status", e.target.value)}>
