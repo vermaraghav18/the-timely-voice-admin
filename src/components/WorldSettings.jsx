@@ -170,6 +170,17 @@ export default function WorldSettings() {
         const t = await res.text().catch(() => "");
         throw new Error(`HTTP ${res.status} ${t}`);
       }
+
+      // also mirror to legacy key used by the homepage
+try {
+  await fetch(`${API_BASE}/api/settings/articleBlockLight`, {
+    method: "PUT",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+} catch (_) {}
+
       alert("World settings saved!");
     } catch (e2) {
       setErr(e2?.message || "Save failed");
