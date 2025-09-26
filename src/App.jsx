@@ -145,7 +145,7 @@ function ArticlesList() {
 
   const raw = useMemo(() => {
     const q = params.get("q")?.trim() || "";
-       const section = params.get("section")?.trim() || "";
+    const section = params.get("section")?.trim() || "";
     const status = params.get("status")?.trim() || "";
     const lang = params.get("lang")?.trim() || "";
     const tag = params.get("tag")?.trim() || "";
@@ -311,7 +311,7 @@ function ArticleEdit() {
         history.back();
       }
     } catch (e2) {
-        setErr(e2.message);
+      setErr(e2.message);
     } finally {
       setBusy(false);
     }
@@ -534,6 +534,17 @@ export default function App() {
           <Protected user={user}>
             <Shell user={user} onLogout={logout}>
               <NewsSplitSettings />
+            </Shell>
+          </Protected>
+        }
+      />
+      {/* ✅ NEW route: World settings */}
+      <Route
+        path="/settings/world"
+        element={
+          <Protected user={user}>
+            <Shell user={user} onLogout={logout}>
+              <WorldSettings />
             </Shell>
           </Protected>
         }

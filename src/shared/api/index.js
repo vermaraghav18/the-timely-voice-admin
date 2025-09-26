@@ -30,9 +30,16 @@ export const categories = {
 };
 
 export const settings = {
+  // read
   get: (key) => request(`/api/settings/${encodeURIComponent(key)}`),
+
+  // legacy: wraps as { value } — keep for backward compat
   upsert: (key, value) =>
     request(`/api/settings/${encodeURIComponent(key)}`, { method: "PUT", body: JSON.stringify({ value }) }),
+
+  // new: send raw JSON object (matches how ArticleBlockLightSettings saves today)
+  put: (key, payload) =>
+    request(`/api/settings/${encodeURIComponent(key)}`, { method: "PUT", body: JSON.stringify(payload) }),
 };
 
 // auth helpers (if used by useAuth)
