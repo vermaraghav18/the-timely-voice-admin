@@ -10,16 +10,16 @@ const API_BASE =
 /**
  * Stored shape (same structure your World page expects):
  * {
- *   hero: { title, summary, imageUrl },
- *   featuredItems: [{ title, summary, time, image, href }],
- *   opinions: { heading, items: [{ title, time, image, href }] },
- *   spotlightItems: [{ brand, title, image, href }],
- *   latestGrid: [{ title, image, href, publishedAt }],
- *   moreWorld: [{ title, summary, image, href, publishedAt }]
+ *   hero: { title, summary, imageUrl, slug?, href? },
+ *   featuredItems: [{ title, summary, time, image, href?, slug? }],
+ *   opinions: { heading, items: [{ title, time, image, href?, slug? }] },
+ *   spotlightItems: [{ brand, title, image, href?, slug? }],
+ *   latestGrid: [{ title, image, href?, slug?, publishedAt }],
+ *   moreWorld: [{ title, summary, image, href?, slug?, publishedAt }]
  * }
  */
 const DEFAULTS = {
-  hero: { title: "", summary: "", imageUrl: "" },
+  hero: { title: "", summary: "", imageUrl: "", href: "", slug: "" },
   featuredItems: [],
   opinions: { heading: "Opinions", items: [] },
   spotlightItems: [],
@@ -50,6 +50,8 @@ export default function WorldSettings() {
             title: data?.hero?.title || "",
             summary: data?.hero?.summary || "",
             imageUrl: data?.hero?.imageUrl || data?.hero?.image || "",
+            href: data?.hero?.href || "",
+            slug: data?.hero?.slug || "",
           },
           featuredItems: Array.isArray(data?.featuredItems) ? data.featuredItems : [],
           opinions: {
@@ -91,7 +93,7 @@ export default function WorldSettings() {
       ...s,
       opinions: {
         ...s.opinions,
-        items: [...(s.opinions.items || []), { title: "", time: "", image: "", href: "" }],
+        items: [...(s.opinions.items || []), { title: "", time: "", image: "", href: "", slug: "" }],
       },
     }));
   const rmOpinion = (i) =>
@@ -122,6 +124,8 @@ export default function WorldSettings() {
           title: form.hero.title.trim(),
           summary: form.hero.summary.trim(),
           imageUrl: form.hero.imageUrl.trim(),
+          href: (form.hero.href || "").trim(),
+          slug: (form.hero.slug || "").trim(),
         },
         featuredItems: (form.featuredItems || []).map((n) => ({
           title: (n.title || "").trim(),
@@ -129,6 +133,7 @@ export default function WorldSettings() {
           time: (n.time || "").trim(),
           image: (n.image || "").trim(),
           href: (n.href || "").trim(),
+          slug: (n.slug || "").trim(),
         })),
         opinions: {
           heading: (form.opinions?.heading || "Opinions").trim(),
@@ -137,6 +142,7 @@ export default function WorldSettings() {
             time: (n.time || "").trim(),
             image: (n.image || "").trim(),
             href: (n.href || "").trim(),
+            slug: (n.slug || "").trim(),
           })),
         },
         spotlightItems: (form.spotlightItems || []).map((n) => ({
@@ -144,11 +150,13 @@ export default function WorldSettings() {
           title: (n.title || "").trim(),
           image: (n.image || "").trim(),
           href: (n.href || "").trim(),
+          slug: (n.slug || "").trim(),
         })),
         latestGrid: (form.latestGrid || []).map((n) => ({
           title: (n.title || "").trim(),
           image: (n.image || "").trim(),
           href: (n.href || "").trim(),
+          slug: (n.slug || "").trim(),
           publishedAt: (n.publishedAt || "").trim(),
         })),
         moreWorld: (form.moreWorld || []).map((n) => ({
@@ -156,6 +164,7 @@ export default function WorldSettings() {
           summary: (n.summary || "").trim(),
           image: (n.image || "").trim(),
           href: (n.href || "").trim(),
+          slug: (n.slug || "").trim(),
           publishedAt: (n.publishedAt || "").trim(),
         })),
       };
@@ -172,14 +181,14 @@ export default function WorldSettings() {
       }
 
       // also mirror to legacy key used by the homepage
-try {
-  await fetch(`${API_BASE}/api/settings/articleBlockLight`, {
-    method: "PUT",
-    credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-} catch (_) {}
+      try {
+        await fetch(`${API_BASE}/api/settings/articleBlockLight`, {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      } catch (_) {}
 
       alert("World settings saved!");
     } catch (e2) {
@@ -236,6 +245,25 @@ try {
             placeholder="https://example.com/center.jpg"
           />
         </label>
+
+        <div style={{ display: "grid", gap: 10, gridTemplateColumns: "1fr 1fr", marginTop: 10 }}>
+          <label>
+            External Link (href)
+            <input
+              value={form.hero.href || ""}
+              onChange={(e) => upHero("href", e.target.value)}
+              placeholder="https://external.site/story"
+            />
+          </label>
+          <label>
+            Internal Slug (slug)
+            <input
+              value={form.hero.slug || ""}
+              onChange={(e) => upHero("slug", e.target.value)}
+              placeholder="my-article-slug"
+            />
+          </label>
+        </div>
       </fieldset>
 
       {/* Center Rotator */}
@@ -247,10 +275,11 @@ try {
           { key: "time", placeholder: "Time (e.g., 12 MIN AGO)" },
           { key: "image", placeholder: "Image URL" },
           { key: "href", placeholder: "Link (href)" },
+          { key: "slug", placeholder: "Slug (internal)" }, // NEW
         ]}
         items={form.featuredItems}
         onAdd={() =>
-          addTo("featuredItems", { title: "", summary: "", time: "", image: "", href: "" })
+          addTo("featuredItems", { title: "", summary: "", time: "", image: "", href: "", slug: "" })
         }
         onRemove={(i) => rmFrom("featuredItems", i)}
         onEdit={(i, k, v) => editIn("featuredItems", i, k, v)}
@@ -276,6 +305,7 @@ try {
             { key: "time", placeholder: "Time (e.g., 1 HOUR AGO)" },
             { key: "image", placeholder: "Image URL" },
             { key: "href", placeholder: "Link (href)" },
+            { key: "slug", placeholder: "Slug (internal)" }, // NEW
           ]}
           items={form.opinions.items}
           onAdd={() => addOpinion()}
@@ -292,9 +322,10 @@ try {
           { key: "title", placeholder: "Title" },
           { key: "image", placeholder: "Image URL (9:16 recommended)" },
           { key: "href", placeholder: "Link (href)" },
+          { key: "slug", placeholder: "Slug (internal)" }, // NEW
         ]}
         items={form.spotlightItems}
-        onAdd={() => addTo("spotlightItems", { brand: "", title: "", image: "", href: "" })}
+        onAdd={() => addTo("spotlightItems", { brand: "", title: "", image: "", href: "", slug: "" })}
         onRemove={(i) => rmFrom("spotlightItems", i)}
         onEdit={(i, k, v) => editIn("spotlightItems", i, k, v)}
       />
@@ -306,10 +337,11 @@ try {
           { key: "title", placeholder: "Title" },
           { key: "image", placeholder: "Image URL" },
           { key: "href", placeholder: "Link (href)" },
+          { key: "slug", placeholder: "Slug (internal)" }, // NEW
           { key: "publishedAt", placeholder: "Published At (ISO, optional)" },
         ]}
         items={form.latestGrid}
-        onAdd={() => addTo("latestGrid", { title: "", image: "", href: "", publishedAt: "" })}
+        onAdd={() => addTo("latestGrid", { title: "", image: "", href: "", slug: "", publishedAt: "" })}
         onRemove={(i) => rmFrom("latestGrid", i)}
         onEdit={(i, k, v) => editIn("latestGrid", i, k, v)}
       />
@@ -322,11 +354,12 @@ try {
           { key: "summary", placeholder: "Summary" },
           { key: "image", placeholder: "Image URL" },
           { key: "href", placeholder: "Link (href)" },
+          { key: "slug", placeholder: "Slug (internal)" }, // NEW
           { key: "publishedAt", placeholder: "Published At (ISO, optional)" },
         ]}
         items={form.moreWorld}
         onAdd={() =>
-          addTo("moreWorld", { title: "", summary: "", image: "", href: "", publishedAt: "" })
+          addTo("moreWorld", { title: "", summary: "", image: "", href: "", slug: "", publishedAt: "" })
         }
         onRemove={(i) => rmFrom("moreWorld", i)}
         onEdit={(i, k, v) => editIn("moreWorld", i, k, v)}
